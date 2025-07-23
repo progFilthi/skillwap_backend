@@ -10,8 +10,8 @@ const getAllUsers = async (req, res) => {
     }
     res.status(200).json({ users });
   } catch (error) {
-    res.status(500).json({ error: "Failed to create a user!" });
-    console.error("Failed to create a user", error);
+    res.status(500).json({ error: "Error in getAllUsers Controller" });
+    console.error("Error in getAllUsers Controller", error);
   }
 };
 

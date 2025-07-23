@@ -1,43 +1,63 @@
-
+// Prisma Client Generator
 generator client {
   provider = "prisma-client-js"
 }
 
+// PostgreSQL Database Configuration
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
+// ========================
+// ENUMS
+// ========================
+
+/// The status of a skill swap request
+enum SwapStatus {
+  pending
+  accepted
+  rejected
+}
+
+// ========================
+// MODELS
+// ========================
+
+/// A registered user in the platform
 model User {
-  id          String         @id @default(uuid())
-  name        String
-  email       String         @unique
-  password    String
-  bio         String?
-  skills      Skill[]        @relation("UserSkills")
-  receivedSwaps SwapRequest[] @relation("Receiver")
-  sentSwaps     SwapRequest[] @relation("Sender")
-  createdAt   DateTime       @default(now())
+  id          String         @id @default(uuid())                      // Unique user ID
+  name        String                                                 // Full name
+  email       String         @unique                                 // Unique email
+  password    String                                                 // Hashed password
+  bio         String?                                                // Optional user bio
+  skills      Skill[]        @relation("UserSkills")                 // User's listed skills
+  receivedSwaps SwapRequest[] @relation("Receiver")                  // Swap requests received
+  sentSwaps     SwapRequest[] @relation("Sender")                    // Swap requests sent
+  createdAt   DateTime       @default(now())                         // Account creation time
 }
 
+/// A skill associated with a user
 model Skill {
-  id        String   @id @default(uuid())
-  name      String
-  level     String   // e.g., Beginner, Intermediate, Expert
-  user      User     @relation("UserSkills", fields: [userId], references: [id])
-  userId    String
-  createdAt DateTime @default(now())
+  id        String   @id @default(uuid())                            // Unique skill ID
+  name      String                                                 // Skill name (e.g. "Frontend Dev")
+  level     String                                                 // Skill level (e.g. "Entry", "Medium", "Expert")
+  user      User     @relation("UserSkills", fields: [userId], references: [id], onDelete: Cascade)
+  userId    String                                                 // Reference to the owning user
+  createdAt DateTime @default(now())                                // Skill added date
+
+  @@unique([userId, name])                                          // Prevents duplicate skills per user
 }
 
+/// A request to swap skills between users
 model SwapRequest {
-  id           String   @id @default(uuid())
-  sender       User     @relation("Sender", fields: [senderId], references: [id])
-  senderId     String
-  receiver     User     @relation("Receiver", fields: [receiverId], references: [id])
-  receiverId   String
-  skillOffered String
-  skillWanted  String
-  status       String   @default("pending") // pending, accepted, rejected
-  createdAt    DateTime @default(now())
+  id           String      @id @default(uuid())                      // Unique request ID
+  sender       User        @relation("Sender", fields: [senderId], references: [id], onDelete: Cascade)
+  senderId     String                                                 // Sender user ID
+  receiver     User        @relation("Receiver", fields: [receiverId], references: [id], onDelete: Cascade)
+  receiverId   String                                                 // Receiver user ID
+  skillOffered String                                                 // Skill offered by sender
+  skillWanted  String                                                 // Skill requested from receiver
+  status       SwapStatus  @default(pending)                          // Current status of the request
+  createdAt    DateTime    @default(now())                            // Request timestamp
 }
-

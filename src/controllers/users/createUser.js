@@ -39,3 +39,24 @@ const createUser = async (req, res) => {
 };
 
 export default createUser;
+
+{
+  /*
+  This is the test for creating user
+
+  {
+    "name":"Filthi",
+    "email":"gamerfilthi123@gmail.com",
+    "password":"123456",
+    "bio":"Lets have fun",
+    "skills":[
+        {
+            "name":"Gamer",
+            "level":"Expert"
+        }
+    ]
+}
+  
+  
+  */
+}

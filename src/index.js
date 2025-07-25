@@ -2,7 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import { toNodeHandler } from "better-auth/node";
-import { auth } from "./lib/auth.js";
+import auth from "./lib/auth.js";
 
 dotenv.config();
 
@@ -12,7 +12,13 @@ const app = express();
 app.all("/api/auth/*", toNodeHandler(auth));
 
 //middlewares
-app.use(cors());
+app.use(
+  cors({
+    origin: process.env.CLIENT_URL, // Replace with your frontend's origin
+    methods: ["GET", "POST", "PUT", "DELETE"], // Specify allowed HTTP methods
+    credentials: true, // Allow credentials (cookies, authorization headers, etc.)
+  })
+);
 app.use(express.json());
 
 //import all the routes here

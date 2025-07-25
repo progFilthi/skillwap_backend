@@ -9,7 +9,7 @@ dotenv.config();
 //init  the express thru app
 const app = express();
 
-app.all("/api/auth/*", toNodeHandler(auth));
+app.all("/api/auth/*splat", toNodeHandler(auth));
 
 //middlewares
 app.use(

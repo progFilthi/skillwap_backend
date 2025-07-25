@@ -1,11 +1,15 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
+import { toNodeHandler } from "better-auth/node";
+import { auth } from "./lib/auth.js";
 
 dotenv.config();
 
 //init  the express thru app
 const app = express();
+
+app.all("/api/auth/*", toNodeHandler(auth));
 
 //middlewares
 app.use(cors());

@@ -1,7 +1,7 @@
-import express from "express";
-import dotenv from "dotenv";
-import cors from "cors";
 import { toNodeHandler } from "better-auth/node";
+import cors from "cors";
+import dotenv from "dotenv";
+import express from "express";
 import { auth } from "./lib/auth.js";
 
 dotenv.config();
@@ -9,12 +9,12 @@ dotenv.config();
 //init  the express thru app
 const app = express();
 
-app.all("/api/auth/*", toNodeHandler(auth));
 
 //middlewares
 app.use(cors());
 app.use(express.json());
 
+app.all("/auth/*splat", toNodeHandler(auth));
 //import all the routes here
 import healthRoute from "./routes/health.route.js";
 import homeRoute from "./routes/home.route.js";
